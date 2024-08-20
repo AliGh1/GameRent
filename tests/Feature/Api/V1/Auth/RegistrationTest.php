@@ -2,10 +2,8 @@
 
 namespace Tests\Feature\Api\V1\Auth;
 
-use App\Models\User;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Facades\Event;
 use Tests\TestCase;
 
@@ -43,4 +41,9 @@ class RegistrationTest extends TestCase
     }
 
     // TODO Authenticated user shouldn't be able to register
+    // TODO Check Validation for Register Request
+
+    // Sanctum::actingAs(
+    //      User::factory()->create()
+    // );
 }

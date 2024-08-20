@@ -3,11 +3,14 @@
 namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Api\V1\LoginRequest;
 use App\Http\Requests\Api\V1\RegisterRequest;
 use App\Models\User;
 use App\Traits\ApiResponses;
 use Illuminate\Auth\Events\Registered;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Validation\ValidationException;
 
 class AuthController extends Controller
 {
@@ -27,6 +30,22 @@ class AuthController extends Controller
             'Authenticated',
             [
                 'token' => $user->createToken('API token for ' . $user->email)->plainTextToken
+            ]
+        );
+    }
+
+    public function login(LoginRequest $request)
+    {
+        $user = User::where('email', $request->email)->first();
+
+        $request->authenticate();
+
+        $tokenExpiration = $request->boolean('remember') ? now()->addWeek() : null;
+
+        return $this->ok(
+            'Authenticated',
+            [
+                'token' => $user->createToken('API token for ' . $user->email, expiresAt: $tokenExpiration)->plainTextToken
             ]
         );
     }
