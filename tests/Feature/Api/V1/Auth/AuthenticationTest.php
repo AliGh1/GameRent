@@ -50,6 +50,21 @@ class AuthenticationTest extends TestCase
         ]);
     }
 
+    public function test_authenticated_user_cannot_login_again(): void
+    {
+        $user = User::factory()->create();
+        $token = $user->createToken('TestToken')->plainTextToken;
+
+        $response = $this->withHeaders(['Authorization' => 'Bearer ' . $token])
+            ->post('api/v1/login', [
+                'email' => $user->email,
+                'password' => 'password',
+            ]);
+
+        $response->assertForbidden();
+        $response->assertJson(['message' => 'You are already authenticated.']);
+    }
+
     public function test_users_can_logout(): void
     {
         $user = User::factory()->create();
@@ -94,6 +109,5 @@ class AuthenticationTest extends TestCase
         ]);
     }
 
-    // TODO Authenticated user shouldn't be able to login
     // TODO Check Validation for Login Request
 }

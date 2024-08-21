@@ -19,19 +19,19 @@ trait ApiResponses {
         ], $statusCode);
     }
 
-//    protected function error($errors = [], $statusCode = null): JsonResponse
-//    {
-//        if (is_string($errors)) {
-//            return response()->json([
-//                'message' => $errors,
-//                'status' => $statusCode
-//            ], $statusCode);
-//        }
-//
-//        return response()->json([
-//            'errors' => $errors
-//        ]);
-//    }
+    protected function error($errors = [], $statusCode = null): JsonResponse
+    {
+        if (is_string($errors)) {
+            return response()->json([
+                'message' => $errors,
+                'status' => $statusCode
+            ], $statusCode);
+        }
+
+        return response()->json([
+            'errors' => $errors
+        ]);
+    }
 //
 //    protected function notAuthorized($message): JsonResponse
 //    {
