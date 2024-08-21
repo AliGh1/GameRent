@@ -13,4 +13,11 @@ Route::prefix('v1')->group(function () {
         ->middleware('guest')
         ->name('login');
 
+    Route::post('/logout', [AuthController::class, 'logout'])
+        ->middleware('auth:sanctum')
+        ->name('logout');
+
+    Route::post('/logout-all', [AuthController::class, 'logoutAll'])
+        ->middleware('auth:sanctum')
+        ->name('logout');
 });
