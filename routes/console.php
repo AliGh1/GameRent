@@ -9,3 +9,5 @@ Artisan::command('inspire', function () {
 })->purpose('Display an inspiring quote')->hourly();
 
 Schedule::command('sanctum:prune-expired --hours=24')->daily();
+
+Schedule::command('auth:clear-resets')->daily();
