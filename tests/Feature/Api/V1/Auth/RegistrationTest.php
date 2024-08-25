@@ -58,5 +58,17 @@ class RegistrationTest extends TestCase
         $response->assertJson(['message' => 'You are already authenticated.']);
     }
 
-    // TODO Check Validation for Register Request
+    public function test_register_validation(): void
+    {
+        $response = $this->postJson('api/v1/register');
+        $response->assertUnprocessable();
+        $response->assertExactJson([
+            'message' => 'The name field is required. (and 2 more errors)',
+            'errors' => [
+                'name' => ['The name field is required.'],
+                'email' => ['The email field is required.'],
+                'password' => ['The password field is required.'],
+            ],
+        ]);
+    }
 }
