@@ -1,10 +1,10 @@
 <?php
 
-use App\Http\Controllers\Api\V1\AuthController;
-use App\Http\Controllers\Api\V1\EmailVerificationNotificationController;
-use App\Http\Controllers\Api\V1\NewPasswordController;
-use App\Http\Controllers\Api\V1\PasswordResetLinkController;
-use App\Http\Controllers\Api\V1\VerifyEmailController;
+use App\Http\Controllers\Api\V1\Auth\AuthController;
+use App\Http\Controllers\Api\V1\Auth\EmailVerificationNotificationController;
+use App\Http\Controllers\Api\V1\Auth\NewPasswordController;
+use App\Http\Controllers\Api\V1\Auth\PasswordResetLinkController;
+use App\Http\Controllers\Api\V1\Auth\VerifyEmailController;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware('guest.api')->group(function () {
