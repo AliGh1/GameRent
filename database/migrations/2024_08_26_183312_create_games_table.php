@@ -16,12 +16,9 @@ return new class extends Migration
             $table->string('title')->unique();
             $table->text('description')->nullable();
             $table->string('image_url');
-            $table->unsignedInteger('price_z2_weekly');
-            $table->unsignedInteger('price_z3_weekly');
+            $table->unsignedInteger('weekly_online_price');
+            $table->unsignedInteger('weekly_online_offline_price');
             $table->date('release_date');
-            $table->string('publisher', 100);
-            $table->string('developer', 100);
-            $table->string('modes', 100);
             $table->string('age_rating', 10);
             $table->timestamps();
         });

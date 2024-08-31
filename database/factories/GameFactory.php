@@ -23,12 +23,9 @@ class GameFactory extends Factory
             'title' => $this->faker->unique()->sentence(3),
             'description' => $this->faker->paragraph,
             'image_url' => $this->faker->imageUrl(),
-            'price_z2_weekly' => $this->faker->numberBetween(60000, 200000),
-            'price_z3_weekly' => $this->faker->numberBetween(50000, 150000),
+            'weekly_online_price' => $this->faker->numberBetween(60000, 200000),
+            'weekly_online_offline_price' => $this->faker->numberBetween(50000, 150000),
             'release_date' => $this->faker->date(),
-            'publisher' => $this->faker->company,
-            'developer' => $this->faker->company,
-            'modes' => $this->faker->randomElement(['Single-player', 'Multiplayer', 'Single-player, Multiplayer']),
             'age_rating' => $this->faker->randomElement(['PEGI 3', 'PEGI 7', 'PEGI 12', 'PEGI 16', 'PEGI 18']),
         ];
     }

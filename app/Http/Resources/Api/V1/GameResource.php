@@ -19,8 +19,9 @@ class GameResource extends JsonResource
             'id' => $this->id,
             'title' => $this->title,
             'description' => Str::limit($this->description),
-            'price_z2_weekly' => $this->price_z2_weekly,
-            'price_z3_weekly' => $this->price_z3_weekly,
+            'image_url' => $this->image_url,
+            'weekly_online_price' => $this->weekly_online_price,
+            'weekly_online_offline_price' => $this->weekly_online_offline_price,
         ];
     }
 }

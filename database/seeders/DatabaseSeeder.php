@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Account;
 use App\Models\Game;
 use App\Models\Genre;
 use App\Models\Platform;
@@ -26,6 +27,8 @@ class DatabaseSeeder extends Seeder
         Genre::factory()->count(5)->create();
         Platform::factory()->count(3)->create();
 
-        Game::factory()->count(10)->create();
+        $games = Game::factory()->count(10)->create();
+
+        Account::factory()->count(20)->recycle($games)->create();
     }
 }
