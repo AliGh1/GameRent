@@ -120,13 +120,12 @@ class GameCatalogTest extends TestCase
     }
 
 
-//    public function test_it_returns_404_if_game_not_found()
-//    {
-//        // Act
-//        $response = $this->getJson('/api/games/999');
-//
-//        // Assert
-//        $response->assertStatus(404)
-//            ->assertJson(['message' => 'Game not found']);
-//    }
+    public function test_it_returns_404_if_game_not_found()
+    {
+        $response = $this->getJson('/api/games/999');
+
+        $response->assertNotFound();
+
+        $response->assertJson(['message' => 'Not Found']);
+    }
 }
