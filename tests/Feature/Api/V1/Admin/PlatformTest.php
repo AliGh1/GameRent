@@ -2,6 +2,7 @@
 
 namespace Tests\Feature\Api\V1\Admin;
 
+use App\Models\Platform;
 use App\Models\User;
 use Database\Seeders\RolesAndPermissionsSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -50,5 +51,24 @@ class PlatformTest extends TestCase
         ]);
 
         $response->assertForbidden();
+    }
+
+    public function test_admin_with_permission_can_view_platforms(): void
+    {
+        $user = User::factory()->create();
+        $platforms = Platform::factory(3)->create();
+        $permission = Permission::create(['name' => 'view.platforms']);
+        $user->givePermissionTo($permission);
+
+        Sanctum::actingAs($user);
+
+        $response = $this->getJson('api/v1/admin/platforms');
+
+        $response->assertJson($platforms->map(function ($platform) {
+            return [
+                'id' => $platform->id,
+                'name' => $platform->name,
+            ];
+        })->toArray());
     }
 }

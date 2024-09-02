@@ -17,7 +17,9 @@ class PlatformController extends Controller
      */
     public function index()
     {
-        //
+        Gate::authorize('view.platforms');
+
+        return Platform::all();
     }
 
     /**
