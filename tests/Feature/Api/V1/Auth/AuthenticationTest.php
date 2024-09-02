@@ -80,7 +80,6 @@ class AuthenticationTest extends TestCase
         ]);
 
         $response->assertExactJson([
-            'data' => [],
             'message' => 'Logged out successfully',
             'status' => 200,
         ]);
@@ -103,7 +102,6 @@ class AuthenticationTest extends TestCase
         $this->assertEquals(0, $user->tokens()->count());
 
         $response->assertExactJson([
-            'data' => [],
             'message' => 'Logged out from all devices successfully',
             'status' => 200,
         ]);
