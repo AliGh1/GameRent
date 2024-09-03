@@ -54,12 +54,18 @@ class PlatformTest extends TestCase
 
         $response->assertOk();
 
-        $response->assertJson($platforms->map(function ($platform) {
-            return [
-                'id' => $platform->id,
-                'name' => $platform->name,
-            ];
-        })->toArray());
+        $expectedData = [
+            'message' => 'Platforms retrieved successfully',
+            'data' => $platforms->map(function ($platform) {
+                return [
+                    'id' => $platform->id,
+                    'name' => $platform->name,
+                ];
+            })->toArray(),
+            'status' => 200
+        ];
+
+        $response->assertExactJson($expectedData);
     }
 
     public function test_admin_with_permission_can_edit_platform(): void

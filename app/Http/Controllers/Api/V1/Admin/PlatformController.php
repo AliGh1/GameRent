@@ -3,9 +3,9 @@
 namespace App\Http\Controllers\Api\V1\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Api\V1\PlatformRequest;
 use App\Models\Platform;
 use App\Traits\ApiResponses;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 
 class PlatformController extends Controller
@@ -19,57 +19,31 @@ class PlatformController extends Controller
     {
         Gate::authorize('view.platform');
 
-        return Platform::all();
+        return $this->success('Platforms retrieved successfully', Platform::all());
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(PlatformRequest $request)
     {
         Gate::authorize('create.platform');
 
-        $request->validate([
-            'name' => 'required|string|max:50|unique:platforms',
-        ]);
+        $platform = Platform::create($request->validated());
 
-        $platform = Platform::create([
-            'name' => $request->name,
-        ]);
-
-        return $this->success('Platform created Successfully', [
-            'id' => $platform->id,
-            'name' => $platform->name,
-        ], 201);
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(Platform $platform)
-    {
-        //
+        return $this->success('Platform created Successfully', $platform, 201);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Platform $platform)
+    public function update(PlatformRequest $request, Platform $platform)
     {
         Gate::authorize('edit.platform');
 
-        $request->validate([
-            'name' => 'required|string|max:50|unique:platforms',
-        ]);
+        $platform->update($request->validated());
 
-        $platform->update([
-            'name' => $request->name
-        ]);
-
-        return $this->success('Platform Updated Successfully', [
-            'id' => $platform->id,
-            'name' => $platform->name,
-        ]);
+        return $this->success('Platform Updated Successfully', $platform);
     }
 
     /**
