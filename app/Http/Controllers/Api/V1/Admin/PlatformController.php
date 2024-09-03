@@ -17,7 +17,7 @@ class PlatformController extends Controller
      */
     public function index()
     {
-        Gate::authorize('view.platforms');
+        Gate::authorize('view.platform');
 
         return Platform::all();
     }
@@ -56,7 +56,20 @@ class PlatformController extends Controller
      */
     public function update(Request $request, Platform $platform)
     {
-        //
+        Gate::authorize('edit.platform');
+
+        $request->validate([
+            'name' => 'required|string|max:50|unique:platforms',
+        ]);
+
+        $platform->update([
+            'name' => $request->name
+        ]);
+
+        return $this->success('Platform Updated Successfully', [
+            'id' => $platform->id,
+            'name' => $platform->name,
+        ]);
     }
 
     /**

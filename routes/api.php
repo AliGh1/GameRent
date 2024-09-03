@@ -12,6 +12,6 @@ Route::prefix('v1')->group(function () {
     Route::get('/games/{game}', [GameCatalogController::class, 'show'])->name('games.show');
 
     Route::prefix('admin')->middleware('auth:sanctum')->group(function () {
-        Route::apiResource('/platforms', PlatformController::class)->only(['index', 'store']);
+        Route::apiResource('/platforms', PlatformController::class)->only(['index', 'store', 'update']);
     });
 });

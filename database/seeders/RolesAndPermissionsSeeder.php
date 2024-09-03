@@ -16,7 +16,8 @@ class RolesAndPermissionsSeeder extends Seeder
     {
         $permissions = [
             'create.platform',
-            'view.platforms'
+            'view.platform',
+            'edit.platform',
         ];
 
         foreach ($permissions as $permission) {

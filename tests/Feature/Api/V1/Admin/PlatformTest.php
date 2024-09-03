@@ -42,27 +42,19 @@ class PlatformTest extends TestCase
             'name' => 'Test Platform',
         ]);
     }
-    public function test_admin_without_permission_can_not_create_platform(): void
-    {
-        Sanctum::actingAs(User::factory()->create());
-
-        $response = $this->postJson('api/v1/admin/platforms', [
-            'name' => 'Test Platform',
-        ]);
-
-        $response->assertForbidden();
-    }
 
     public function test_admin_with_permission_can_view_platforms(): void
     {
         $user = User::factory()->create();
         $platforms = Platform::factory(3)->create();
-        $permission = Permission::create(['name' => 'view.platforms']);
+        $permission = Permission::create(['name' => 'view.platform']);
         $user->givePermissionTo($permission);
 
         Sanctum::actingAs($user);
 
         $response = $this->getJson('api/v1/admin/platforms');
+
+        $response->assertOk();
 
         $response->assertJson($platforms->map(function ($platform) {
             return [
@@ -70,5 +62,52 @@ class PlatformTest extends TestCase
                 'name' => $platform->name,
             ];
         })->toArray());
+    }
+
+    public function test_admin_with_permission_can_edit_platform(): void
+    {
+        $user = User::factory()->create();
+        $platform = Platform::factory()->create();
+        $permission = Permission::create(['name' => 'edit.platform']);
+        $user->givePermissionTo($permission);
+
+        Sanctum::actingAs($user);
+
+        $response = $this->putJson("api/v1/admin/platforms/{$platform->id}", [
+            'name' => 'Changed Platform Name',
+        ]);
+
+        $response->assertOk();
+
+        $response->assertExactJson([
+            'message' => 'Platform Updated Successfully',
+            'data' => [
+                'id' => $platform->id,
+                'name' => 'Changed Platform Name'
+            ],
+            'status' => 200,
+        ]);
+
+        $platform = $platform->fresh();
+        $this->assertEquals('Changed Platform Name', $platform->name);
+    }
+
+    public function test_admin_without_permissions_cannot_manage_platform(): void
+    {
+        Sanctum::actingAs(User::factory()->create());
+        $platform = Platform::factory()->create();
+
+        $response = $this->postJson('api/v1/admin/platforms', [
+            'name' => 'Test Platform',
+        ]);
+        $response->assertForbidden();
+
+        $response = $this->getJson('api/v1/admin/platforms');
+        $response->assertForbidden();
+
+        $response = $this->putJson("api/v1/admin/platforms/{$platform->id}", [
+            'name' => 'Changed Platform Name',
+        ]);
+        $response->assertForbidden();
     }
 }
