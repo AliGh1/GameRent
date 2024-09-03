@@ -77,6 +77,10 @@ class PlatformController extends Controller
      */
     public function destroy(Platform $platform)
     {
-        //
+        Gate::authorize('delete.platform');
+
+        $platform->delete();
+
+        return $this->ok('Platform deleted Successfully');
     }
 }

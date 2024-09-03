@@ -4,9 +4,7 @@ namespace Tests\Feature\Api\V1\Admin;
 
 use App\Models\Platform;
 use App\Models\User;
-use Database\Seeders\RolesAndPermissionsSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Laravel\Sanctum\Sanctum;
 use Spatie\Permission\Models\Permission;
 use Tests\TestCase;
@@ -92,6 +90,29 @@ class PlatformTest extends TestCase
         $this->assertEquals('Changed Platform Name', $platform->name);
     }
 
+    public function test_admin_with_permission_can_delete_platform(): void
+    {
+        $user = User::factory()->create();
+        $platform = Platform::factory()->create();
+        $permission = Permission::create(['name' => 'delete.platform']);
+        $user->givePermissionTo($permission);
+
+        Sanctum::actingAs($user);
+
+        $response = $this->deleteJson("api/v1/admin/platforms/{$platform->id}");
+
+        $response->assertOk();
+
+        $response->assertExactJson([
+            'message' => 'Platform deleted Successfully',
+            'status' => 200,
+        ]);
+
+        $this->assertDatabaseMissing('platforms', [
+            'id' => $platform->id,
+        ]);
+    }
+
     public function test_admin_without_permissions_cannot_manage_platform(): void
     {
         Sanctum::actingAs(User::factory()->create());
@@ -108,6 +129,9 @@ class PlatformTest extends TestCase
         $response = $this->putJson("api/v1/admin/platforms/{$platform->id}", [
             'name' => 'Changed Platform Name',
         ]);
+        $response->assertForbidden();
+
+        $response = $this->deleteJson("api/v1/admin/platforms/{$platform->id}");
         $response->assertForbidden();
     }
 }

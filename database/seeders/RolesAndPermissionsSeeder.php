@@ -18,6 +18,7 @@ class RolesAndPermissionsSeeder extends Seeder
             'create.platform',
             'view.platform',
             'edit.platform',
+            'delete.platform',
         ];
 
         foreach ($permissions as $permission) {
