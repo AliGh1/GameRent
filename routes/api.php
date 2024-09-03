@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\V1\Admin\GenreController;
 use App\Http\Controllers\Api\V1\Admin\PlatformController;
 use App\Http\Controllers\Api\V1\Game\GameCatalogController;
 use Illuminate\Http\Request;
@@ -13,5 +14,6 @@ Route::prefix('v1')->group(function () {
 
     Route::prefix('admin')->middleware('auth:sanctum')->group(function () {
         Route::apiResource('/platforms', PlatformController::class)->except('show');
+        Route::apiResource('/genres', GenreController::class)->except('show');
     });
 });
