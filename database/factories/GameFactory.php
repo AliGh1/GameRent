@@ -22,6 +22,7 @@ class GameFactory extends Factory
         return [
             'title' => $this->faker->unique()->sentence(3),
             'description' => $this->faker->paragraph,
+            'slug' => $this->faker->unique()->slug(),
             'image_url' => $this->faker->imageUrl(),
             'weekly_online_price' => $this->faker->numberBetween(60000, 200000),
             'weekly_online_offline_price' => $this->faker->numberBetween(50000, 150000),

@@ -20,6 +20,7 @@ class GameDetailResource extends JsonResource
             'id' => $this->id,
             'title' => $this->title,
             'description' => $this->description,
+            'slug' => $this->slug,
             'image_url' => $this->image_url,
             'release_date' => $this->release_date,
             'age_rating' => $this->age_rating,

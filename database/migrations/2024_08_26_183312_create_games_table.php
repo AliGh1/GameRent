@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('title')->unique();
             $table->text('description')->nullable();
+            $table->string('slug')->unique();
             $table->string('image_url');
             $table->unsignedInteger('weekly_online_price');
             $table->unsignedInteger('weekly_online_offline_price');

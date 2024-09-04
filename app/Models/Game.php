@@ -20,6 +20,8 @@ class Game extends Model
     protected $fillable = [
         'title',
         'description',
+        'image_url',
+        'slug',
         'weekly_online_price',
         'weekly_online_offline_price',
         'release_date',
