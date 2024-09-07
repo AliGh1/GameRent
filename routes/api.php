@@ -7,7 +7,11 @@ use App\Http\Controllers\Api\V1\Game\GameCatalogController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
-Route::prefix('v1')->group(function () {
+Route::middleware(['auth:sanctum'])->get('/user', function (Request $request) {
+    return $request->user();
+});
+
+Route::prefix('v1')->name('api.')->group(function () {
     require __DIR__.'/auth.php';
 
     Route::get('/games', [GameCatalogController::class, 'index'])->name('games.index');

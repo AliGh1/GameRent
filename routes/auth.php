@@ -1,10 +1,9 @@
 <?php
 
 use App\Http\Controllers\Api\V1\Auth\AuthController;
-use App\Http\Controllers\Api\V1\Auth\EmailVerificationNotificationController;
-use App\Http\Controllers\Api\V1\Auth\NewPasswordController;
-use App\Http\Controllers\Api\V1\Auth\PasswordResetLinkController;
-use App\Http\Controllers\Api\V1\Auth\VerifyEmailController;
+use App\Http\Controllers\Auth\EmailVerificationNotificationController;
+use App\Http\Controllers\Auth\NewPasswordController;
+use App\Http\Controllers\Auth\PasswordResetLinkController;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware('guest.api')->group(function () {
@@ -22,10 +21,6 @@ Route::middleware('guest.api')->group(function () {
 });
 
 Route::middleware('auth:sanctum')->group(function () {
-    Route::get('/verify-email/{id}/{hash}', VerifyEmailController::class)
-        ->middleware(['signed', 'throttle:6,1'])
-        ->name('verification.verify');
-
     Route::post('/email/verification-notification', [EmailVerificationNotificationController::class, 'store'])
         ->middleware(['throttle:6,1'])
         ->name('verification.send');

@@ -1,6 +1,6 @@
 <?php
 
-namespace Api\V1\Auth;
+namespace Tests\Feature\Auth;
 
 use App\Models\User;
 use Illuminate\Auth\Events\Verified;
