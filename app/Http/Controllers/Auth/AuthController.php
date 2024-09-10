@@ -7,6 +7,7 @@ use App\Http\Requests\Auth\LoginRequest;
 use App\Http\Requests\Auth\RegisterRequest;
 use App\Models\User;
 use App\Traits\ApiResponses;
+use Exception;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -51,5 +52,20 @@ class AuthController extends Controller
         return response()->noContent();
     }
 
-    // TODO we should have a logout all or other device who even delete user token
+    public function logoutOtherDevices(Request $request)
+    {
+        $request->validate([
+            'password' => 'required|string',
+        ]);
+
+        try {
+            Auth::guard('web')->logoutOtherDevices($request->password);
+
+            $request->user()->tokens()->delete();
+
+            return $this->ok('Logged out from other devices successfully');
+        } catch (Exception $e) {
+            return $this->error("The given password does not match the current password", 403);
+        }
+    }
 }

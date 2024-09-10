@@ -11,6 +11,7 @@ use Illuminate\Auth\AuthenticationException;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
@@ -58,10 +59,22 @@ class AuthController extends Controller
         return $this->ok('Logged out successfully');
     }
 
-    public function logoutAll(Request $request)
+    public function logoutOtherDevices(Request $request)
     {
-        $request->user()->tokens()->delete();
+        $request->validate([
+            'password' => 'required|string',
+        ]);
 
-        return $this->ok('Logged out from all devices successfully');
+        if (! Hash::check($request->password, $request->user()->password)) {
+            return $this->error("The given password does not match the current password", 403);
+        }
+
+        $currentTokenId = $request->user()->currentAccessToken()->id;
+
+        $request->user()->tokens()->where('id', '!=', $currentTokenId)->delete();
+
+        DB::table('sessions')->where('user_id', $request->user()->id)->delete();
+
+        return $this->ok('Logged out from other devices successfully');
     }
 }

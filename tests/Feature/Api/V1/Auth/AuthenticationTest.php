@@ -85,25 +85,32 @@ class AuthenticationTest extends TestCase
         ]);
     }
 
-    public function test_users_can_logout_from_everywhere(): void
+    public function test_users_can_logout_other_devices(): void
     {
         $user = User::factory()->create();
 
-        $user->createToken('Token1');
-        $token = $user->createToken('Token2')->plainTextToken;
+        $token = $user->createToken('Token 1')->plainTextToken;
+
+        $user->createToken('Token 2');
 
         $this->assertEquals(2, $user->tokens()->count());
 
         $response = $this->withHeaders(['Authorization' => 'Bearer ' . $token])
-            ->postJson('api/v1/logout-all');
+            ->postJson('api/v1/logout-other-devices', [
+                'password' => 'password'
+            ]);
 
         $response->assertOk();
 
-        $this->assertEquals(0, $user->tokens()->count());
-
         $response->assertExactJson([
-            'message' => 'Logged out from all devices successfully',
+            'message' => 'Logged out from other devices successfully',
             'status' => 200,
+        ]);
+
+        $this->assertEquals(1, $user->tokens()->count());
+
+        $this->assertDatabaseHas('personal_access_tokens', [
+            'name' => 'Token 1',
         ]);
     }
 

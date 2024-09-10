@@ -28,6 +28,6 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout'])
         ->name('logout');
 
-    Route::post('/logout-all', [AuthController::class, 'logoutAll'])
-        ->name('logout');
+    Route::post('/logout-other-devices', [AuthController::class, 'logoutOtherDevices'])
+        ->name('logout.other.devices');
 });
