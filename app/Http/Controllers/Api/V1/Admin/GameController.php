@@ -15,6 +15,7 @@ use Illuminate\Support\Str;
 class GameController extends Controller
 {
     use ApiResponses;
+
     /**
      * Display a listing of the resource.
      */
@@ -28,7 +29,7 @@ class GameController extends Controller
      */
     public function store(StoreGameRequest $request)
     {
-        $gameSlug = Str::slug($request->title);
+        $gameSlug = Str::slug($request->input('title'));
 
         $imagePath = $request->file('image')->store("images/games/{$gameSlug}", 'public');
 
@@ -36,18 +37,18 @@ class GameController extends Controller
 
         try {
             $game = Game::create([
-                'title' => $request->title,
-                'description' => $request->description,
+                'title' => $request->input('title'),
+                'description' => $request->input('description'),
                 'slug' => $gameSlug,
-                'release_date' => $request->release_date,
-                'age_rating' => $request->age_rating,
+                'release_date' => $request->input('release_date'),
+                'age_rating' => $request->input('age_rating'),
                 'image_url' => $imagePath,
-                'weekly_online_price' => $request->weekly_online_price,
-                'weekly_online_offline_price' => $request->weekly_online_offline_price,
+                'weekly_online_price' => $request->input('weekly_online_price'),
+                'weekly_online_offline_price' => $request->input('weekly_online_offline_price'),
             ]);
 
-            $game->genres()->attach($request->genres);
-            $game->platforms()->attach($request->platforms);
+            $game->genres()->attach($request->input('genres'));
+            $game->platforms()->attach($request->input('platforms'));
 
             DB::commit();
 
@@ -56,8 +57,8 @@ class GameController extends Controller
         } catch (\Exception $e) {
             DB::rollBack();
 
-            if (isset($filePath) && Storage::disk('public')->exists($filePath)) {
-                Storage::disk('public')->delete($filePath);
+            if (Storage::disk('public')->exists($imagePath)) {
+                Storage::disk('public')->delete($imagePath);
             }
 
             return $this->error('Something went wrong, please try again later', 422);
@@ -77,7 +78,40 @@ class GameController extends Controller
      */
     public function update(UpdateGameRequest $request, Game $game)
     {
-        //
+        $changed = $request->safe()->only([
+            'title',
+            'description',
+            'release_date',
+            'age_rating',
+            'weekly_online_price',
+            'weekly_online_offline_price'
+        ]);
+
+        if ($request->filled('title')) {
+            $changed['slug'] = Str::slug($request->title);
+        }
+
+        if ($request->hasFile('image')) {
+            if (Storage::disk('public')->exists($game->image_url)) {
+                Storage::disk('public')->delete($game->image_url);
+            }
+
+            $gameSlug = $changed['slug'] ?? $game->slug;
+
+            $changed['image_url'] = $request->file('image')->store("images/games/{$gameSlug}", 'public');
+        }
+
+        if ($request->filled('genres')) {
+            $game->genres()->sync($request->input('genres'));
+        }
+
+        if ($request->filled('platforms')) {
+            $game->platforms()->sync($request->input('platforms'));
+        }
+
+        $game->update($changed);
+
+        return $this->success('Game updated successfully', new GameDetailResource($game));
     }
 
     /**

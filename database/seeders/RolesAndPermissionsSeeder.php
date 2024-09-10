@@ -24,6 +24,7 @@ class RolesAndPermissionsSeeder extends Seeder
             'edit.genre',
             'delete.genre',
             'create.game',
+            'edit.game',
         ];
 
         foreach ($permissions as $permission) {
