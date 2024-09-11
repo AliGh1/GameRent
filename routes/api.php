@@ -21,7 +21,7 @@ Route::prefix('v1')->name('api.')->group(function () {
         Route::apiResource('/platforms', PlatformController::class)->except('show');
         Route::apiResource('/genres', GenreController::class)->except('show');
 
-        Route::apiResource('/games', GameController::class)->only(['store', 'update']);
+        Route::apiResource('/games', GameController::class)->except(['index', 'show']);
 
     });
 });

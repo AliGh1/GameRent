@@ -9,6 +9,7 @@ use App\Http\Resources\Api\V1\GameDetailResource;
 use App\Models\Game;
 use App\Traits\ApiResponses;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
@@ -119,6 +120,14 @@ class GameController extends Controller
      */
     public function destroy(Game $game)
     {
-        //
+        Gate::authorize('delete.game');
+
+        $game->delete();
+
+        if (Storage::disk('public')->exists($game->image_url)) {
+            Storage::disk('public')->delete($game->image_url);
+        }
+
+        return $this->ok('Game deleted successfully');
     }
 }

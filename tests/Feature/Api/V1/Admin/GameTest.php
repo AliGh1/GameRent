@@ -284,4 +284,56 @@ class GameTest extends TestCase
 
         $this->assertDatabaseHas('games', ['image_url' => 'images/games/old-game/old-image.jpg']);
     }
+
+    public function test_admin_with_permission_can_delete_game(): void
+    {
+        $user = User::factory()->create();
+        $permission = Permission::create(['name' => 'delete.game']);
+        $user->givePermissionTo($permission);
+
+        Sanctum::actingAs($user);
+
+        $game = Game::factory()->create([
+            'image_url' => 'images/games/old-game/old-image.jpg'
+        ]);
+
+        Storage::fake('public');
+
+        Storage::disk('public')->put('images/games/old-game/old-image.jpg', '');
+
+        $response = $this->deleteJson("api/v1/admin/games/{$game->id}");
+
+        $response->assertOk();
+
+        $response->assertExactJson([
+            'message' => 'Game deleted successfully',
+            'status' => 200,
+        ]);
+
+        $this->assertDatabaseMissing('games', [
+            'id' => $game->id,
+        ]);
+
+        Storage::disk('public')->assertMissing('images/games/old-game/old-image.jpg');
+    }
+
+    public function test_admin_without_permission_cannot_delete_game(): void
+    {
+        $user = User::factory()->create();
+        Sanctum::actingAs($user);
+
+        $game = Game::factory()->create([
+            'image_url' => 'images/games/old-game/old-image.jpg'
+        ]);
+
+        Storage::fake('public');
+
+        Storage::disk('public')->put('images/games/old-game/old-image.jpg', '');
+
+        $response = $this->deleteJson("api/v1/admin/games/{$game->id}");
+
+        $response->assertForbidden();
+
+        Storage::disk('public')->assertExists('images/games/old-game/old-image.jpg');
+    }
 }
