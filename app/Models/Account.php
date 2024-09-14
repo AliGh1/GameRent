@@ -14,8 +14,8 @@ class Account extends Model
     protected $fillable = [
         'email',
         'password',
+        'secret_key',
         'mode',
-        'password',
     ];
 
     /**
@@ -27,6 +27,7 @@ class Account extends Model
     {
         return [
             'password' => 'encrypted',
+            'secret_key' => 'encrypted',
             'availability' => 'boolean',
             'mode' => AccountMode::class,
         ];

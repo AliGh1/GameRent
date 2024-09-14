@@ -16,6 +16,7 @@ return new class extends Migration
             $table->foreignId('game_id')->constrained()->onDelete('cascade');
             $table->string('email');
             $table->text('password');
+            $table->text('secret_key');
             $table->enum('mode', ['online', 'online_offline']);
             $table->boolean('availability')->default(1);
             $table->timestamps();

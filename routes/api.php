@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\V1\Admin\AccountController;
 use App\Http\Controllers\Api\V1\Admin\GameController;
 use App\Http\Controllers\Api\V1\Admin\GenreController;
 use App\Http\Controllers\Api\V1\Admin\PlatformController;
@@ -22,6 +23,7 @@ Route::prefix('v1')->name('api.')->group(function () {
         Route::apiResource('/genres', GenreController::class)->except('show');
 
         Route::apiResource('/games', GameController::class)->except(['index', 'show']);
+        Route::apiResource('/games/{game}/accounts', AccountController::class)->only('store');
 
     });
 });
