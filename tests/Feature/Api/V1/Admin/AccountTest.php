@@ -83,4 +83,29 @@ class AccountTest extends TestCase
             'mode' => $account->mode,
         ]);
     }
+
+    public function test_admin_with_permission_can_destroy_account(): void
+    {
+        $user = User::factory()->create();
+        $permission = Permission::create(['name' => 'delete.account']);
+        $user->givePermissionTo($permission);
+
+        $account = Account::factory()->create();
+
+        Sanctum::actingAs($user);
+
+
+        $response = $this->deleteJson("api/v1/admin/games/$account->game_id/accounts/$account->id");
+
+        $response->assertOk();
+
+        $response->assertExactJson([
+            'message' => 'Account deleted successfully',
+            'status' => 200,
+        ]);
+
+        $this->assertDatabaseMissing('accounts', [
+            'id' => $account->id,
+        ]);
+    }
 }

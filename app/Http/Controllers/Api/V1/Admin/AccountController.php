@@ -8,6 +8,7 @@ use App\Http\Requests\Api\V1\Account\UpdateAccountRequest;
 use App\Models\Account;
 use App\Models\Game;
 use App\Traits\ApiResponses;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Request;
 
 
@@ -72,8 +73,12 @@ class AccountController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Account $account)
+    public function destroy(Game $game, Account $account)
     {
+        Gate::authorize('delete.account');
 
+        $account->delete();
+
+        return $this->ok('Account deleted successfully');
     }
 }
