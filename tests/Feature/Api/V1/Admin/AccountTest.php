@@ -108,4 +108,27 @@ class AccountTest extends TestCase
             'id' => $account->id,
         ]);
     }
+
+    public function test_admin_without_permissions_cannot_manage_account(): void
+    {
+        Sanctum::actingAs(User::factory()->create());
+        $account = Account::factory()->create();
+        $game = Game::factory()->create();
+
+        $data = [
+            'email' => 'game@example.com',
+            'password' => 'password',
+            'secret_key' => 'DJHJMGSSCMJ5XNMR',
+            'mode' => AccountMode::OnlineOffline,
+        ];
+
+        $response = $this->postJson("api/v1/admin/games/$game->id/accounts", $data);
+        $response->assertForbidden();
+
+        $response = $this->putJson("api/v1/admin/games/$account->game_id/accounts/$account->id", $data);
+        $response->assertForbidden();
+
+        $response = $this->deleteJson("api/v1/admin/games/$account->game_id/accounts/$account->id");
+        $response->assertForbidden();
+    }
 }
