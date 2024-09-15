@@ -23,7 +23,7 @@ Route::prefix('v1')->name('api.')->group(function () {
         Route::apiResource('/genres', GenreController::class)->except('show');
 
         Route::apiResource('/games', GameController::class)->except(['index', 'show']);
-        Route::apiResource('/games/{game}/accounts', AccountController::class)->only('store');
+        Route::apiResource('/games.accounts', AccountController::class)->scoped()->only(['store', 'update']);
 
     });
 });

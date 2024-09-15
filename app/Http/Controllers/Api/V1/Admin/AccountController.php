@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\V1\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\V1\Account\StoreAccountRequest;
+use App\Http\Requests\Api\V1\Account\UpdateAccountRequest;
 use App\Models\Account;
 use App\Models\Game;
 use App\Traits\ApiResponses;
@@ -29,8 +30,8 @@ class AccountController extends Controller
     {
         $game->accounts()->create([
             'email' => $request->input('email'),
-            'password' => bcrypt($request->input('password')),
-            'secret_key' => bcrypt($request->input('secret_key')),
+            'password' => encrypt($request->input('password')),
+            'secret_key' => encrypt($request->input('secret_key')),
             'mode' => $request->input('mode'),
         ]);
 
@@ -48,9 +49,24 @@ class AccountController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Game $game, Account $account)
+    public function update(UpdateAccountRequest $request, Game $game, Account $account)
     {
+        $changed = $request->safe()->only([
+            'email',
+            'mode',
+        ]);
 
+        if ($request->filled('password')) {
+            $changed['password'] = encrypt($request->input('password'));
+        }
+
+        if ($request->filled('secret_key')) {
+            $changed['secret_key'] = encrypt($request->input('secret_key'));
+        }
+
+        $account->update($changed);
+
+        return $this->ok('Account updated successfully');
     }
 
     /**

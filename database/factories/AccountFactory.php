@@ -28,7 +28,7 @@ class AccountFactory extends Factory
             'game_id' => Game::factory(),
             'email' => fake()->unique()->safeEmail(),
             'password' => static::$password ??= Crypt::encryptString('password'),
-            'secret_key' => Crypt::encryptString('DJHJMGSSCMJ5XNMR'), // an example of real secret key
+            'secret_key' => encrypt('DJHJMGSSCMJ5XNMR'), // an example of real secret key
             'mode' => $this->faker->randomElement(['online', 'online_offline'])
         ];
     }
