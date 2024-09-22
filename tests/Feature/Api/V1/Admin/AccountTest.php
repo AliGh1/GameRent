@@ -29,7 +29,7 @@ class AccountTest extends TestCase
             'email' => 'game@example.com',
             'password' => 'password',
             'secret_key' => 'DJHJMGSSCMJ5XNMR',
-            'mode' => AccountMode::OnlineOffline,
+            'mode' => AccountMode::ONLINE_OFFLINE,
         ];
 
         $response = $this->postJson("api/v1/admin/games/$game->id/accounts", $data);
@@ -61,7 +61,7 @@ class AccountTest extends TestCase
             'email' => 'game@example.com',
             'password' => 'password',
             'secret_key' => 'DJHJMGSSCMJ5XNMR',
-            'mode' => AccountMode::OnlineOffline,
+            'mode' => AccountMode::ONLINE_OFFLINE,
         ];
 
         $response = $this->putJson("api/v1/admin/games/$account->game_id/accounts/$account->id", $data);
@@ -119,7 +119,7 @@ class AccountTest extends TestCase
             'email' => 'game@example.com',
             'password' => 'password',
             'secret_key' => 'DJHJMGSSCMJ5XNMR',
-            'mode' => AccountMode::OnlineOffline,
+            'mode' => AccountMode::ONLINE_OFFLINE,
         ];
 
         $response = $this->postJson("api/v1/admin/games/$game->id/accounts", $data);

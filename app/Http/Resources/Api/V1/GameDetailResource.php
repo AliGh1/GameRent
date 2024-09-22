@@ -27,21 +27,21 @@ class GameDetailResource extends JsonResource
             'genres' => $this->genres->pluck('name'),
             'platforms' => $this->platforms->pluck('name'),
             'availability' => [
-                'online' => $this->checkOnlineAvailability(),
-                'online_offline' => $this->checkOnlineOfflineAvailability()
+                'online' => $this->checkAvailability(AccountMode::ONLINE),
+                'online_offline' => $this->checkAvailability(AccountMode::ONLINE_OFFLINE),
             ],
             'price' => [
                 'online' => [
-                    'one_week' => $this->calculatePrice(1, AccountMode::Online),
-                    'two_week' => $this->calculatePrice(2, AccountMode::Online),
-                    'three_week' => $this->calculatePrice(3, AccountMode::Online),
-                    'one_month' => $this->calculatePrice(4, AccountMode::Online),
+                    'one_week' => $this->calculatePrice(1, AccountMode::ONLINE),
+                    'two_week' => $this->calculatePrice(2, AccountMode::ONLINE),
+                    'three_week' => $this->calculatePrice(3, AccountMode::ONLINE),
+                    'one_month' => $this->calculatePrice(4, AccountMode::ONLINE),
                 ],
                 'online_offline' => [
-                    'one_week' => $this->calculatePrice(1, AccountMode::OnlineOffline),
-                    'two_week' => $this->calculatePrice(2, AccountMode::OnlineOffline),
-                    'three_week' => $this->calculatePrice(3, AccountMode::OnlineOffline),
-                    'one_month' => $this->calculatePrice(4, AccountMode::OnlineOffline),
+                    'one_week' => $this->calculatePrice(1, AccountMode::ONLINE_OFFLINE),
+                    'two_week' => $this->calculatePrice(2, AccountMode::ONLINE_OFFLINE),
+                    'three_week' => $this->calculatePrice(3, AccountMode::ONLINE_OFFLINE),
+                    'one_month' => $this->calculatePrice(4, AccountMode::ONLINE_OFFLINE),
                 ],
             ]
         ];

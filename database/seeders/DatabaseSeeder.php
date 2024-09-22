@@ -24,12 +24,12 @@ class DatabaseSeeder extends Seeder
             'email' => 'test@example.com',
         ]);
 
-        $user = User::factory()->create([
+        $superAdmin = User::factory()->create([
             'name' => 'Super Admin',
             'email' => 'superadmin@example.com',
         ]);
 
-        $user->assignRole('Super Admin');
+        $superAdmin->assignRole('Super Admin');
 
         Genre::factory()->count(5)->create();
         Platform::factory()->count(3)->create();

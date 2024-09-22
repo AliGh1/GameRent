@@ -24,8 +24,8 @@ class GameFactory extends Factory
             'description' => $this->faker->paragraph,
             'slug' => $this->faker->unique()->slug(),
             'image_url' => $this->faker->imageUrl(),
-            'weekly_online_price' => $this->faker->numberBetween(60000, 200000),
-            'weekly_online_offline_price' => $this->faker->numberBetween(50000, 150000),
+            'weekly_online_price' => $this->faker->numberBetween(50000, 150000),
+            'weekly_online_offline_price' => $this->faker->numberBetween(60000, 200000),
             'release_date' => $this->faker->date(),
             'age_rating' => $this->faker->randomElement(['PEGI 3', 'PEGI 7', 'PEGI 12', 'PEGI 16', 'PEGI 18']),
         ];

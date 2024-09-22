@@ -35,8 +35,8 @@ class StoreAccountRequest extends FormRequest
                 Rule::unique('accounts')->where(function ($query) {
                     return $query->where(
                         [
-                            ["email", "=", $this->input('email')],
-                            ["mode", "=", $this->input('mode')]
+                            ["email", $this->input('email')],
+                            ["mode", $this->input('mode')]
                         ]
                     );
                 }),

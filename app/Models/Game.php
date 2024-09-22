@@ -46,8 +46,8 @@ class Game extends Model
     public function calculatePrice(int $duration, AccountMode $accountMode): float
     {
         $basePrice = match ($accountMode) {
-            AccountMode::Online => $this->weekly_online_price,
-            AccountMode::OnlineOffline => $this->weekly_online_offline_price,
+            AccountMode::ONLINE => $this->weekly_online_price,
+            AccountMode::ONLINE_OFFLINE => $this->weekly_online_offline_price,
         };
 
         $discount = match ($duration) {
@@ -62,20 +62,31 @@ class Game extends Model
         return round($totalPrice);
     }
 
-
-    public function checkOnlineAvailability(): bool
+    /**
+     * Check the availability of accounts based on mode.
+     *
+     * @param AccountMode $mode
+     * @return bool
+     */
+    public function checkAvailability(AccountMode $mode): bool
     {
         return $this->accounts()
-            ->where('mode', AccountMode::Online)
+            ->where('mode', $mode)
             ->where('availability', true)
             ->exists();
     }
 
-    public function checkOnlineOfflineAvailability(): bool
+    /**
+     * Get an available account for this game based on the specified mode.
+     *
+     * @param AccountMode $mode
+     * @return Account|null
+     */
+    public function getAvailableAccountByMode(AccountMode $mode): ?Account
     {
         return $this->accounts()
-            ->where('mode', AccountMode::OnlineOffline)
+            ->where('mode', $mode)
             ->where('availability', true)
-            ->exists();
+            ->first();
     }
 }
