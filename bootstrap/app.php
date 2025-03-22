@@ -21,7 +21,7 @@ return Application::configure(basePath: dirname(__DIR__))
 
         $middleware->alias([
             'verified' => \App\Http\Middleware\EnsureEmailIsVerified::class,
-            'guest.api' => \App\Http\Middleware\EnsureGuestForApi::class
+            'guest.api' => \App\Http\Middleware\EnsureGuestForApi::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {

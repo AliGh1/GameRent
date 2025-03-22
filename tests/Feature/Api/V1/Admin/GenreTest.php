@@ -31,7 +31,7 @@ class GenreTest extends TestCase
             'message' => 'Genre created Successfully',
             'data' => [
                 'id' => 1,
-                'name' => 'Test Genre'
+                'name' => 'Test Genre',
             ],
             'status' => 201,
         ]);
@@ -62,7 +62,7 @@ class GenreTest extends TestCase
                     'name' => $genre->name,
                 ];
             })->toArray(),
-            'status' => 200
+            'status' => 200,
         ];
 
         $response->assertExactJson($expectedData);
@@ -87,7 +87,7 @@ class GenreTest extends TestCase
             'message' => 'Genre Updated Successfully',
             'data' => [
                 'id' => $genre->id,
-                'name' => 'Changed Genre Name'
+                'name' => 'Changed Genre Name',
             ],
             'status' => 200,
         ]);

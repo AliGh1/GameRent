@@ -9,8 +9,8 @@ use App\Models\Account;
 use App\Models\Game;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Shetabit\Payment\Facade\Payment as ShetabitPayment;
 use Laravel\Sanctum\Sanctum;
+use Shetabit\Payment\Facade\Payment as ShetabitPayment;
 use Tests\TestCase;
 
 class RentalTest extends TestCase
@@ -36,21 +36,21 @@ class RentalTest extends TestCase
         // Act
         $response = $this->postJson("api/v1/rentals/$game->id", [
             'account_mode' => AccountMode::ONLINE_OFFLINE,
-            'rental_duration_weeks' => $rentalPeriod
+            'rental_duration_weeks' => $rentalPeriod,
         ]);
 
         // Assert
         $response->assertOk();
         $response->assertJson([
-            'message' => 'Rental request created. Please complete the payment'
+            'message' => 'Rental request created. Please complete the payment',
         ]);
 
         $response->assertJsonStructure([
             'data' => [
-                'payment_url'
+                'payment_url',
             ],
             'status',
-            'message'
+            'message',
         ]);
 
         // Check the rental was created
@@ -100,13 +100,13 @@ class RentalTest extends TestCase
         // Act
         $response = $this->postJson("api/v1/rentals/$game->id", [
             'account_mode' => AccountMode::ONLINE_OFFLINE,
-            'rental_duration_weeks' => $rentalPeriod
+            'rental_duration_weeks' => $rentalPeriod,
         ]);
 
         // Assert
         $response->assertStatus(422);
         $response->assertJson([
-            'message' => 'Payment failed'
+            'message' => 'Payment failed',
         ]);
 
         // Check the rental and payment were NOT created

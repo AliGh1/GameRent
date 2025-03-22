@@ -4,7 +4,6 @@ namespace Tests\Feature\Auth;
 
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Support\Facades\DB;
 use Tests\TestCase;
 
 class AuthenticationTest extends TestCase
@@ -58,7 +57,7 @@ class AuthenticationTest extends TestCase
         $this->actingAs($user);
 
         $response = $this->postJson('/logout-other-devices', [
-            'password' => 'password'
+            'password' => 'password',
         ]);
 
         $response->assertOk();

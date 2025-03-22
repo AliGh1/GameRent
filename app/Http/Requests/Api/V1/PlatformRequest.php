@@ -23,7 +23,7 @@ class PlatformRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => 'required|string|max:50|unique:platforms'
+            'name' => 'required|string|max:50|unique:platforms',
         ];
     }
 }

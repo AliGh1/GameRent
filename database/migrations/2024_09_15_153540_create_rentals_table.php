@@ -23,7 +23,7 @@ return new class extends Migration
                 'expired',
                 'returned',
                 'suspended',
-                'canceled'
+                'canceled',
             ]);
             $table->timestamps();
         });

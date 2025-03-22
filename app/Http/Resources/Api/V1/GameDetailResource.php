@@ -5,7 +5,6 @@ namespace App\Http\Resources\Api\V1;
 use App\Enums\AccountMode;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
-use Illuminate\Support\Str;
 
 class GameDetailResource extends JsonResource
 {
@@ -43,7 +42,7 @@ class GameDetailResource extends JsonResource
                     'three_week' => $this->calculatePrice(3, AccountMode::ONLINE_OFFLINE),
                     'one_month' => $this->calculatePrice(4, AccountMode::ONLINE_OFFLINE),
                 ],
-            ]
+            ],
         ];
     }
 }

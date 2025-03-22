@@ -85,7 +85,7 @@ class GameController extends Controller
             'release_date',
             'age_rating',
             'weekly_online_price',
-            'weekly_online_offline_price'
+            'weekly_online_offline_price',
         ]);
 
         if ($request->filled('title')) {

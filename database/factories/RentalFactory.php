@@ -30,8 +30,8 @@ class RentalFactory extends Factory
                 'expired',
                 'returned',
                 'suspended',
-                'canceled'
-            ])
+                'canceled',
+            ]),
         ];
     }
 }

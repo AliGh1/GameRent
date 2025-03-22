@@ -11,6 +11,7 @@ use Tests\TestCase;
 class RegistrationTest extends TestCase
 {
     use RefreshDatabase;
+
     public function test_new_users_can_register(): void
     {
         Event::fake();
@@ -24,7 +25,7 @@ class RegistrationTest extends TestCase
 
         $response->assertOk();
 
-        Event::assertDispatched(Registered::class, function ($event)  {
+        Event::assertDispatched(Registered::class, function ($event) {
             return $event->user->email === 'test@example.com';
         });
 
@@ -46,7 +47,7 @@ class RegistrationTest extends TestCase
         $user = User::factory()->create();
         $token = $user->createToken('TestToken')->plainTextToken;
 
-        $response = $this->withHeaders(['Authorization' => 'Bearer ' . $token])
+        $response = $this->withHeaders(['Authorization' => 'Bearer '.$token])
             ->postJson('api/v1/register', [
                 'name' => 'Another User',
                 'email' => 'another@example.com',

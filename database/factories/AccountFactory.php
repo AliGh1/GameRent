@@ -29,7 +29,7 @@ class AccountFactory extends Factory
             'email' => fake()->unique()->safeEmail(),
             'password' => static::$password ??= Crypt::encryptString('password'),
             'secret_key' => encrypt('DJHJMGSSCMJ5XNMR'), // an example of real secret key
-            'mode' => $this->faker->randomElement(['online', 'online_offline'])
+            'mode' => $this->faker->randomElement(['online', 'online_offline']),
         ];
     }
 
