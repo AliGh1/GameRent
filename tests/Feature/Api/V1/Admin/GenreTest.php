@@ -1,6 +1,6 @@
 <?php
 
-namespace Api\V1\Admin;
+namespace Tests\Feature\Api\V1\Admin;
 
 use App\Models\Genre;
 use App\Models\User;

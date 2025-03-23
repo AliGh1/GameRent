@@ -10,7 +10,7 @@ return [
     | You can switch to a different driver at runtime.
     |
     */
-    'default' => env('PAYMENT_GATEWAY', 'payir'),
+    'default' => env('PAYMENT_GATEWAY', 'local'),
 
     /*
     |--------------------------------------------------------------------------
@@ -102,17 +102,6 @@ return [
             'callbackUrl' => 'http://yoursite.com/path/to',
             'description' => 'payment using etebarino',
         ],
-        'idpay' => [
-            'apiPurchaseUrl' => 'https://api.idpay.ir/v1.1/payment',
-            'apiPaymentUrl' => 'https://idpay.ir/p/ws/',
-            'apiSandboxPaymentUrl' => 'https://idpay.ir/p/ws-sandbox/',
-            'apiVerificationUrl' => 'https://api.idpay.ir/v1.1/payment/verify',
-            'merchantId' => '',
-            'callbackUrl' => 'http://yoursite.com/path/to',
-            'description' => 'payment using idpay',
-            'sandbox' => false, // set it to true for test environments
-            'currency' => 'R', //Can be R, T (Rial, Toman)
-        ],
         'irandargah' => [
             /* Normal api */
             'apiPurchaseUrl' => 'https://dargaah.com/payment',
@@ -190,9 +179,10 @@ return [
             'sandboxApiPurchaseUrl' => ' https://sandbox.api.parspal.com/v1/payment/request',
             'sandboxApiVerificationUrl' => 'https://sandbox.api.parspal.com/v1/payment/verify',
 
-            // You can change the token storage path in Laravel like this
+            // You can change the cache path in Laravel like this
             // 'cachePath' => function_exists('storage_path') ? storage_path('parspal/') : 'parspal/'
             'cachePath' => 'parspal/',
+            'cacheExpireTTL' => 3600, // Cache expire time in seconds
 
             'sandbox' => false, // Set it to true for test environments
             'merchantId' => '', // Set `00000000aaaabbbbcccc000000000000` for test environments (sandbox)
@@ -200,50 +190,40 @@ return [
             'currency' => 'T', // Can be R, T (Rial, Toman)
         ],
         'pasargad' => [
-            'apiPaymentUrl' => 'https://pep.shaparak.ir/payment.aspx',
-            'apiGetToken' => 'https://pep.shaparak.ir/Api/v1/Payment/GetToken',
-            'apiCheckTransactionUrl' => 'https://pep.shaparak.ir/Api/v1/Payment/CheckTransactionResult',
-            'apiVerificationUrl' => 'https://pep.shaparak.ir/Api/v1/Payment/VerifyPayment',
+            'baseUrl' => 'https://pep.shaparak.ir/dorsa1',
+            'userName' => '',
+            'password' => '',
             'merchantId' => '',
             'terminalCode' => '',
-            'certificate' => '', // can be string (and set certificateType to xml_string) or an xml file path (and set cetificateType to xml_file)
-            'certificateType' => 'xml_file', // can be: xml_file, xml_string
             'callbackUrl' => 'http://yoursite.com/path/to',
-            'currency' => 'R', //Can be R, T (Rial, Toman)
-        ],
-        'payir' => [
-            'apiPurchaseUrl' => 'https://pay.ir/pg/send',
-            'apiPaymentUrl' => 'https://pay.ir/pg/',
-            'apiVerificationUrl' => 'https://pay.ir/pg/verify',
-            'merchantId' => env('PAYMENT_GATEWAY_MERCHANT_ID', 'test'), // set it to `test` for test environments
-            'callbackUrl' => 'http://yoursite.com/path/to',
-            'description' => 'payment using payir',
             'currency' => 'T', //Can be R, T (Rial, Toman)
         ],
         'paypal' => [
             /* normal api */
-            'apiPurchaseUrl' => 'https://www.paypal.com/cgi-bin/webscr',
-            'apiPaymentUrl' => 'https://www.zarinpal.com/pg/StartPay/',
-            'apiVerificationUrl' => 'https://ir.zarinpal.com/pg/services/WebGate/wsdl',
+            'accessTokenUrl' => 'https://api-m.paypal.com/v1/oauth2/token',
+            'purchaseUrl' => 'https://api-m.paypal.com/v2/checkout/orders',
+            'paymentUrl' => 'https://www.paypal.com/checkoutnow?token=',
+            'verificationUrl' => 'https://api-m.paypal.com/v2/checkout/orders/{order_id}/capture', // {order_id} will be replaced automatically
 
             /* sandbox api */
-            'sandboxApiPurchaseUrl' => 'https://www.sandbox.paypal.com/cgi-bin/webscr',
-            'sandboxApiPaymentUrl' => 'https://sandbox.zarinpal.com/pg/StartPay/',
-            'sandboxApiVerificationUrl' => 'https://sandbox.zarinpal.com/pg/services/WebGate/wsdl',
+            'sandboxAccessTokenUrl' => 'https://api-m.sandbox.paypal.com/v1/oauth2/token',
+            'sandboxPurchaseUrl' => 'https://api-m.sandbox.paypal.com/v2/checkout/orders',
+            'sandboxPaymentUrl' => 'https://www.sandbox.paypal.com/checkoutnow?token=',
+            'sandboxVerificationUrl' => 'https://api-m.sandbox.paypal.com/v2/checkout/orders/{order_id}/capture', // {order_id} will be replaced automatically
 
-            'mode' => 'normal', // can be normal, sandbox
-            'id' => '', // Specify the email of the PayPal Business account
-            'callbackUrl' => 'http://yoursite.com/path/to',
-            'description' => 'payment using paypal',
-            'currency' => 'T', //Can be R, T (Rial, Toman)
+            'mode' => 'normal', // Can be 'normal' or 'sandbox'
+            'clientId' => '',
+            'clientSecret' => '',
+            'callbackUrl' => 'https://yoursite.com/path/to',
+            'currency' => 'USD', // See https://developer.paypal.com/api/rest/reference/currency-codes for a list of available currency codes
         ],
         'payping' => [
-            'apiPurchaseUrl' => 'https://api.payping.ir/v2/pay/',
-            'apiPaymentUrl' => 'https://api.payping.ir/v2/pay/gotoipg/',
-            'apiVerificationUrl' => 'https://api.payping.ir/v2/pay/verify/',
-            'merchantId' => env('PAYMENT_GATEWAY_MERCHANT_ID'),
-            'callbackUrl' => 'https://yoursite.com/path/to',
-            'description' => 'Payment for renting a game on ' . config('app.name'),
+            'apiPurchaseUrl' => 'https://api.payping.ir/v3/pay/',
+            'apiPaymentUrl' => 'https://api.payping.ir/v3/pay/start/',
+            'apiVerificationUrl' => 'https://api.payping.ir/v3/pay/verify/',
+            'merchantId' => '',
+            'callbackUrl' => 'http://yoursite.com/path/to',
+            'description' => 'payment using payping',
             'currency' => 'T', //Can be R, T (Rial, Toman)
         ],
         'paystar' => [
@@ -301,6 +281,7 @@ return [
             'apiPaymentUrl' => 'https://sep.shaparak.ir/payment.aspx',
             'apiVerificationUrl' => 'https://sep.shaparak.ir/payments/referencepayment.asmx?WSDL',
             'merchantId' => '',
+            'password' => '',
             'callbackUrl' => '',
             'description' => 'payment using saman',
             'currency' => 'T', //Can be R, T (Rial, Toman)
@@ -323,15 +304,6 @@ return [
             'description' => 'payment using sepehr(saderat)',
             'currency' => 'T', //Can be R, T (Rial, Toman)
         ],
-        'walleta' => [
-            'apiPurchaseUrl' => 'https://cpg.walleta.ir/payment/request.json',
-            'apiPaymentUrl' => 'https://cpg.walleta.ir/ticket/',
-            'apiVerificationUrl' => 'https://cpg.walleta.ir/payment/verify.json',
-            'merchantId' => '',
-            'callbackUrl' => 'http://yoursite.com/path/to',
-            'description' => 'payment using walleta',
-            'currency' => 'T', //Can be R, T (Rial, Toman)
-        ],
         'yekpay' => [
             'apiPurchaseUrl' => 'https://gate.yekpay.com/api/payment/server?wsdl',
             'apiPaymentUrl' => 'https://gate.yekpay.com/api/payment/start/',
@@ -350,7 +322,7 @@ return [
 
             /* sandbox api */
             'sandboxApiPurchaseUrl' => 'https://sandbox.zarinpal.com/pg/v4/payment/request.json',
-            'sandboxApiPaymentUrl' => 'https://sandbox.zarinpal.com/pg/StartPay/',
+            'sandboxApiPaymentUrl'  => 'https://sandbox.zarinpal.com/pg/StartPay/',
             'sandboxApiVerificationUrl' => 'https://sandbox.zarinpal.com/pg/v4/payment/verify.json',
 
             /* zarinGate api */
@@ -501,6 +473,18 @@ return [
             'description' => 'payment using Snapp Pay.',
             'currency' => 'T', //Can be R, T (Rial, Toman)
         ],
+        'daracard' => [
+            'apiPurchaseUrl' => 'https://ipg.daracard.co/api/v0/Request/PaymentRequest/',
+            'getAction' => 'https://ipg.daracard.co/#/purchase/',
+            'apiPaymentUrl' => 'https://ipg.daracard.co/#/purchase/',
+            'apiVerificationUrl' => 'https://ipg.daracard.co/api/v0/Advice/Verify/',
+            'merchantId' => '',
+            'terminalId' => '',
+            'username' => '',
+            'password' => '',
+            'callbackUrl' => 'http://yoursite.com/path/to',
+            'description' => 'payment using daracard',
+        ],
     ],
 
     /*
@@ -524,15 +508,14 @@ return [
         'behpardakht' => \Shetabit\Multipay\Drivers\Behpardakht\Behpardakht::class,
         'digipay' => \Shetabit\Multipay\Drivers\Digipay\Digipay::class,
         'etebarino' => \Shetabit\Multipay\Drivers\Etebarino\Etebarino::class,
-        'idpay' => \Shetabit\Multipay\Drivers\Idpay\Idpay::class,
         'irandargah' => \Shetabit\Multipay\Drivers\IranDargah\IranDargah::class,
         'irankish' => \Shetabit\Multipay\Drivers\Irankish\Irankish::class,
         'jibit' => \Shetabit\Multipay\Drivers\Jibit\Jibit::class,
         'nextpay' => \Shetabit\Multipay\Drivers\Nextpay\Nextpay::class,
         'omidpay' => \Shetabit\Multipay\Drivers\Omidpay\Omidpay::class,
         'parsian' => \Shetabit\Multipay\Drivers\Parsian\Parsian::class,
+        'parspal' => \Shetabit\Multipay\Drivers\Parspal\Parspal::class,
         'pasargad' => \Shetabit\Multipay\Drivers\Pasargad\Pasargad::class,
-        'payir' => \Shetabit\Multipay\Drivers\Payir\Payir::class,
         'paypal' => \Shetabit\Multipay\Drivers\Paypal\Paypal::class,
         'payping' => \Shetabit\Multipay\Drivers\Payping\Payping::class,
         'paystar' => \Shetabit\Multipay\Drivers\Paystar\Paystar::class,
@@ -541,7 +524,6 @@ return [
         'saman' => \Shetabit\Multipay\Drivers\Saman\Saman::class,
         'sep' => \Shetabit\Multipay\Drivers\SEP\SEP::class,
         'sepehr' => \Shetabit\Multipay\Drivers\Sepehr\Sepehr::class,
-        'walleta' => \Shetabit\Multipay\Drivers\Walleta\Walleta::class,
         'yekpay' => \Shetabit\Multipay\Drivers\Yekpay\Yekpay::class,
         'zarinpal' => \Shetabit\Multipay\Drivers\Zarinpal\Zarinpal::class,
         'zibal' => \Shetabit\Multipay\Drivers\Zibal\Zibal::class,

@@ -1,6 +1,6 @@
 <?php
 
-namespace Api\V1;
+namespace Tests\Feature\Api\V1;
 
 use App\Enums\AccountMode;
 use App\Enums\PaymentStatus;
@@ -94,7 +94,16 @@ class RentalTest extends TestCase
         $amount = $game->calculatePrice($rentalPeriod, AccountMode::ONLINE_OFFLINE);
 
         // Mock the payment gateway to throw an exception
-        ShetabitPayment::shouldReceive('callbackUrl->purchase->pay->toJson')
+        ShetabitPayment::shouldReceive('callbackUrl')
+            ->andReturnSelf();
+
+        ShetabitPayment::shouldReceive('purchase')
+            ->andReturnSelf();
+
+        ShetabitPayment::shouldReceive('pay')
+            ->andReturnSelf();
+
+        ShetabitPayment::shouldReceive('toJson')
             ->andThrow(new \Exception('Payment failed'));
 
         // Act

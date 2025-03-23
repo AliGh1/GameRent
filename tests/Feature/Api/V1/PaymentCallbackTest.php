@@ -1,6 +1,6 @@
 <?php
 
-namespace Api\V1;
+namespace Tests\Feature\Api\V1;
 
 use App\Enums\PaymentStatus;
 use App\Enums\RentalStatus;
