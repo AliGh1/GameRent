@@ -2,8 +2,7 @@
 
 namespace App\Http\Controllers\Api\V1\Game;
 
-use App\Http\Controllers\Controller;;
-
+use App\Http\Controllers\Controller;
 use App\Http\Resources\Api\V1\GameDetailResource;
 use App\Http\Resources\Api\V1\GameResource;
 use App\Models\Game;
@@ -17,6 +16,7 @@ class GameCatalogController extends Controller
     {
         // TODO add Filter, Search, Sort
         $games = Game::latest('updated_at')->paginate();
+
         return GameResource::collection($games);
     }
 

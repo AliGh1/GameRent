@@ -9,8 +9,6 @@ use App\Models\Account;
 use App\Models\Game;
 use App\Traits\ApiResponses;
 use Illuminate\Support\Facades\Gate;
-use Illuminate\Support\Facades\Request;
-
 
 class AccountController extends Controller
 {

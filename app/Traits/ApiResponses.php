@@ -4,7 +4,8 @@ namespace App\Traits;
 
 use Illuminate\Http\JsonResponse;
 
-trait ApiResponses {
+trait ApiResponses
+{
     protected function ok($message, $data = []): JsonResponse
     {
         return $this->success($message, $data);
@@ -14,10 +15,10 @@ trait ApiResponses {
     {
         $response = [
             'message' => $message,
-            'status' => $statusCode
+            'status' => $statusCode,
         ];
 
-        if (!empty($data)) {
+        if (! empty($data)) {
             $response['data'] = $data;
         }
 
@@ -29,12 +30,12 @@ trait ApiResponses {
         if (is_string($errors)) {
             return response()->json([
                 'message' => $errors,
-                'status' => $statusCode
+                'status' => $statusCode,
             ], $statusCode);
         }
 
         return response()->json([
-            'errors' => $errors
+            'errors' => $errors,
         ]);
     }
 }

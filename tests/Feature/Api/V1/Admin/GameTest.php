@@ -116,7 +116,7 @@ class GameTest extends TestCase
         $response->assertForbidden();
 
         $response->assertExactJson([
-            'message' => 'Forbidden'
+            'message' => 'Forbidden',
         ]);
 
         $this->assertDatabaseMissing('games', [
@@ -141,7 +141,7 @@ class GameTest extends TestCase
         $game = Game::factory()->create([
             'title' => 'Old Game',
             'slug' => 'old-game',
-            'image_url' => 'images/games/old-game/old-image.jpg'
+            'image_url' => 'images/games/old-game/old-image.jpg',
         ]);
 
         Storage::disk('public')->put('images/games/old-game/old-image.jpg', '');
@@ -237,12 +237,11 @@ class GameTest extends TestCase
     {
         $user = User::factory()->create();
 
-
         $genres = Genre::factory()->count(2)->create();
         $platforms = Platform::factory()->count(2)->create();
 
         $game = Game::factory()->create([
-            'image_url' => 'images/games/old-game/old-image.jpg'
+            'image_url' => 'images/games/old-game/old-image.jpg',
         ]);
 
         Storage::fake('public');
@@ -294,7 +293,7 @@ class GameTest extends TestCase
         Sanctum::actingAs($user);
 
         $game = Game::factory()->create([
-            'image_url' => 'images/games/old-game/old-image.jpg'
+            'image_url' => 'images/games/old-game/old-image.jpg',
         ]);
 
         Storage::fake('public');
@@ -323,7 +322,7 @@ class GameTest extends TestCase
         Sanctum::actingAs($user);
 
         $game = Game::factory()->create([
-            'image_url' => 'images/games/old-game/old-image.jpg'
+            'image_url' => 'images/games/old-game/old-image.jpg',
         ]);
 
         Storage::fake('public');

@@ -31,7 +31,7 @@ class PlatformTest extends TestCase
             'message' => 'Platform created Successfully',
             'data' => [
                 'id' => 1,
-                'name' => 'Test Platform'
+                'name' => 'Test Platform',
             ],
             'status' => 201,
         ]);
@@ -62,7 +62,7 @@ class PlatformTest extends TestCase
                     'name' => $platform->name,
                 ];
             })->toArray(),
-            'status' => 200
+            'status' => 200,
         ];
 
         $response->assertExactJson($expectedData);
@@ -87,7 +87,7 @@ class PlatformTest extends TestCase
             'message' => 'Platform Updated Successfully',
             'data' => [
                 'id' => $platform->id,
-                'name' => 'Changed Platform Name'
+                'name' => 'Changed Platform Name',
             ],
             'status' => 200,
         ]);

@@ -29,7 +29,7 @@ class AuthController extends Controller
         return $this->ok(
             'Authenticated',
             [
-                'token' => $user->createToken('API token for ' . $user->email)->plainTextToken
+                'token' => $user->createToken('API token for '.$user->email)->plainTextToken,
             ]
         );
     }
@@ -45,7 +45,7 @@ class AuthController extends Controller
         return $this->ok(
             'Authenticated',
             [
-                'token' => $user->createToken('API token for ' . $user->email, expiresAt: $tokenExpiration)->plainTextToken
+                'token' => $user->createToken('API token for '.$user->email, expiresAt: $tokenExpiration)->plainTextToken,
             ]
         );
     }
@@ -64,7 +64,7 @@ class AuthController extends Controller
         ]);
 
         if (! Hash::check($request->password, $request->user()->password)) {
-            return $this->error("The given password does not match the current password", 403);
+            return $this->error('The given password does not match the current password', 403);
         }
 
         $currentTokenId = $request->user()->currentAccessToken()->id;

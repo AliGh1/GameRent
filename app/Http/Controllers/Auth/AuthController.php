@@ -65,7 +65,7 @@ class AuthController extends Controller
 
             return $this->ok('Logged out from other devices successfully');
         } catch (Exception $e) {
-            return $this->error("The given password does not match the current password", 403);
+            return $this->error('The given password does not match the current password', 403);
         }
     }
 }

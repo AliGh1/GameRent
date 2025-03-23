@@ -64,9 +64,6 @@ class Game extends Model
 
     /**
      * Check the availability of accounts based on mode.
-     *
-     * @param AccountMode $mode
-     * @return bool
      */
     public function checkAvailability(AccountMode $mode): bool
     {
@@ -78,9 +75,6 @@ class Game extends Model
 
     /**
      * Get an available account for this game based on the specified mode.
-     *
-     * @param AccountMode $mode
-     * @return Account|null
      */
     public function getAvailableAccountByMode(AccountMode $mode): ?Account
     {

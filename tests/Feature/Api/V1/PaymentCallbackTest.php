@@ -10,11 +10,11 @@ use Exception;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Mockery;
 use PHPUnit\Framework\Attributes\DataProvider;
-use Shetabit\Payment\Facade\Payment as ShetabitPayment;
 use Shetabit\Multipay\Contracts\ReceiptInterface;
 use Shetabit\Multipay\Exceptions\InvoiceNotFoundException;
 use Shetabit\Multipay\Exceptions\PurchaseFailedException;
 use Shetabit\Multipay\Exceptions\TimeoutException;
+use Shetabit\Payment\Facade\Payment as ShetabitPayment;
 use Tests\TestCase;
 
 class PaymentCallbackTest extends TestCase
@@ -22,6 +22,7 @@ class PaymentCallbackTest extends TestCase
     use RefreshDatabase;
 
     private Rental $rental;
+
     private Payment $payment;
 
     protected function setUp(): void
@@ -57,19 +58,19 @@ class PaymentCallbackTest extends TestCase
             ->andReturn($receipt);
 
         // Act
-        $response = $this->getJson("/api/v1/payment/callback?status=1&token=dummy-transaction-id");
+        $response = $this->getJson('/api/v1/payment/callback?status=1&token=dummy-transaction-id');
 
         // Assert
-        $response->assertRedirect(config('app.frontend_url') . '/payment-status?status=success&reference_id=dummy-reference-id');
+        $response->assertRedirect(config('app.frontend_url').'/payment-status?status=success&reference_id=dummy-reference-id');
 
         $this->assertDatabaseHas('payments', [
             'transaction_id' => 'dummy-transaction-id',
-            'status' => PaymentStatus::PAID
+            'status' => PaymentStatus::PAID,
         ]);
 
         $this->assertDatabaseHas('rentals', [
             'id' => $this->rental->id,
-            'status' => RentalStatus::ACTIVE
+            'status' => RentalStatus::ACTIVE,
         ]);
     }
 
@@ -82,19 +83,19 @@ class PaymentCallbackTest extends TestCase
         ShetabitPayment::shouldReceive('verify')->andThrow($exception);
 
         // Act
-        $response = $this->get("/api/v1/payment/callback?status=0&token=dummy-transaction-id");
+        $response = $this->get('/api/v1/payment/callback?status=0&token=dummy-transaction-id');
 
         // Assert
-        $response->assertRedirect(config('app.frontend_url') . "/payment-status?status=error&message={$message}");
+        $response->assertRedirect(config('app.frontend_url')."/payment-status?status=error&message={$message}");
 
         $this->assertDatabaseHas('payments', [
             'transaction_id' => 'dummy-transaction-id',
-            'status' => PaymentStatus::FAILED
+            'status' => PaymentStatus::FAILED,
         ]);
 
         $this->assertDatabaseHas('rentals', [
             'id' => $this->rental->id,
-            'status' => RentalStatus::CANCELED
+            'status' => RentalStatus::CANCELED,
         ]);
     }
 

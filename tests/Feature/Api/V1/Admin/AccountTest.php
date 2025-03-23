@@ -94,7 +94,6 @@ class AccountTest extends TestCase
 
         Sanctum::actingAs($user);
 
-
         $response = $this->deleteJson("api/v1/admin/games/$account->game_id/accounts/$account->id");
 
         $response->assertOk();

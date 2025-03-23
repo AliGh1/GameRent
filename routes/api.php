@@ -14,7 +14,7 @@ Route::middleware(['auth:sanctum'])->get('/user', function (Request $request) {
 });
 
 Route::prefix('v1')->name('api.')->group(function () {
-    require __DIR__ . '/auth.php';
+    require __DIR__.'/auth.php';
 
     Route::get('/games', [GameCatalogController::class, 'index'])->name('games.index');
     Route::get('/games/{game}', [GameCatalogController::class, 'show'])->name('games.show');

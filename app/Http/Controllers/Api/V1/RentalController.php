@@ -31,7 +31,7 @@ class RentalController extends Controller
     {
         $account = $game->getAvailableAccountByMode(AccountMode::from($request->account_mode));
 
-        if (!$account) {
+        if (! $account) {
             return $this->error('No available accounts for this game with the selected criteria.', 404);
         }
 
@@ -57,6 +57,7 @@ class RentalController extends Controller
             DB::commit();
         } catch (Exception $e) {
             DB::rollBack();
+
             return $this->error($e->getMessage(), 422);
         }
 
@@ -77,16 +78,16 @@ class RentalController extends Controller
             $receipt = ShetabitPayment::amount($payment->amount)->transactionId($request->token)->verify();
 
             $payment->update([
-                'status' => PaymentStatus::PAID
+                'status' => PaymentStatus::PAID,
             ]);
 
             $payment->rental()->update([
-                'status' => RentalStatus::ACTIVE
+                'status' => RentalStatus::ACTIVE,
             ]);
 
             Log::info('Payment verified successfully', ['reference_id' => $receipt->getReferenceId()]);
 
-            return redirect()->to(config('app.frontend_url') . '/payment-status?status=success&reference_id=' . urlencode($receipt->getReferenceId()));
+            return redirect()->to(config('app.frontend_url').'/payment-status?status=success&reference_id='.urlencode($receipt->getReferenceId()));
 
         } catch (Exception $e) {
             return $this->handlePaymentFailure($request->token, $e->getMessage());
@@ -95,10 +96,6 @@ class RentalController extends Controller
 
     /**
      * Handle payment failure by reverting changes.
-     *
-     * @param string $transactionId
-     * @param string $message
-     * @return RedirectResponse
      */
     private function handlePaymentFailure(string $transactionId, string $message): RedirectResponse
     {
@@ -106,19 +103,19 @@ class RentalController extends Controller
 
         if ($payment) {
             $payment->update([
-                'status' => PaymentStatus::FAILED
+                'status' => PaymentStatus::FAILED,
             ]);
 
             $rental = $payment->rental;
             if ($rental) {
                 $rental->update([
-                    'status' => RentalStatus::CANCELED
+                    'status' => RentalStatus::CANCELED,
                 ]);
 
                 $account = $rental->account;
                 if ($account) {
                     $account->update([
-                        'availability' => true
+                        'availability' => true,
                     ]);
                 }
             }
@@ -126,10 +123,8 @@ class RentalController extends Controller
             Log::error('Payment failed', ['transaction_id' => $transactionId, 'message' => $message]);
         }
 
-        return redirect()->to(config('app.frontend_url') . '/payment-status?status=error&message=' . urlencode($message));
+        return redirect()->to(config('app.frontend_url').'/payment-status?status=error&message='.urlencode($message));
     }
-
-
 
     /**
      * Calculate return date based on rental duration
@@ -150,7 +145,7 @@ class RentalController extends Controller
             'user_id' => auth()->id(),
             'rental_date' => now(),
             'return_date' => $returnDate,
-            'status' => RentalStatus::PENDING
+            'status' => RentalStatus::PENDING,
         ]);
     }
 
@@ -170,12 +165,14 @@ class RentalController extends Controller
 
     /**
      * Create an invoice for payment
+     *
      * @throws Exception
      */
     private function createInvoice(int $price): Invoice
     {
-        $invoice = new Invoice();
+        $invoice = new Invoice;
         $invoice->amount($price)->via(config('payment.default'));
+
         return $invoice;
     }
 }
